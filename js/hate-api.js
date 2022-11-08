@@ -1,25 +1,35 @@
 "use strict";
 
-const paragraph_limit = 5;
+const paragraph_limit = 1;
 const text = document.getElementsByClassName('texto');
 
 /**
 * Function that counts the ammount of paragraphs in a HTML element
 */
-function countLines(elem) {
-    var paragraphs = elem.innerHTML.split("<br>").filter(String);
-    var len = paragraphs.length;
-    if (len === 0) {
-        return 1;
-    } else {
-        return len;
-    }
+function api_query(message) {
+    $.ajax({
+        url: 'url',
+        type: 'post',
+        data: {str: message},
+        success: function (data) {
+            if (data) {
+                
+            }
+            else {
+                
+            }
+        },
+        error: function() {
+            
+        }
+    });
 }
+
 
 chrome.storage.local.get("settings", function (data) {
     const settings = data.settings ?? {};
 
-    if (!settings["eh-shorten-message"]) {
+    if (!settings["setting-censor-text"]) {
         return;
     }
 
@@ -33,6 +43,15 @@ chrome.storage.local.get("settings", function (data) {
     for (let i = 0; i < text.length; i++) {
         const options = text[i].lastElementChild;
         text[i].removeChild(options); // Removed
+
+        const long_text = text[i].innerHTML;
+        const paragraphs = text[i].innerHTML.split("<br>");
+
+        text[i].innerHTML = '<div><span class="short-text">' + "" + '</span><span class="long-text" style="display: none">' + long_text + '</span><br><button class="show-more-button" data-more="0">Mostrar hate speech</span></div>';
+        
+        text[i].append(options); // Added
+        
+        /*
         const text_length = countLines(text[i]);
         if (text_length > paragraph_limit) {
             const paragraphs = text[i].innerHTML.split("<br>");
@@ -48,6 +67,7 @@ chrome.storage.local.get("settings", function (data) {
             text[i].innerHTML = '<div><span class="short-text">' + short_text + '</span><span class="long-text" style="display: none">' + long_text + '</span><br><button class="show-more-button" data-more="0">Ver más</span></div>';
         }
         text[i].append(options); // Added
+        */
     }
 
 
@@ -64,7 +84,7 @@ chrome.storage.local.get("settings", function (data) {
             if (this.getAttribute('data-more') === "0") {
                 this.setAttribute('data-more', 1);
                 this.style.display = 'block';
-                this.innerHTML = 'Leer menos';
+                this.innerHTML = 'Ocultar hate speech';
 
                 this.previousElementSibling.previousElementSibling.previousElementSibling.style.display = 'none';
                 this.previousElementSibling.previousElementSibling.style.display = 'inline';
@@ -73,7 +93,7 @@ chrome.storage.local.get("settings", function (data) {
             else if (this.getAttribute('data-more') === "1") {
                 this.setAttribute('data-more', 0);
                 this.style.display = 'inline';
-                this.innerHTML = 'Leer más';
+                this.innerHTML = 'Mostrar hate speech';
 
                 this.previousElementSibling.previousElementSibling.previousElementSibling.style.display = 'inline';
                 this.previousElementSibling.previousElementSibling.style.display = 'none';
