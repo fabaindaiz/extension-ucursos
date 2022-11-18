@@ -35,7 +35,7 @@ async function api_query(text) {
             console.log({text: msg_text, response: data})
 
             if (data['inc_label']) {
-                text.innerHTML = '<div><span class="short-text">' + "" + '</span><span class="long-text" style="display: none">' + long_text + '</span><br><button class="show-more-button" data-more="0">Mostrar hate speech</span></div>';
+                text.innerHTML = '<div><span class="short-text">' + "Este mensaje puede ser ofensivo" + '</span><span class="long-text" style="display: none">' + long_text + '</span><br><button class="show-more-button" data-more="0">Mostrar</span></div>';
             }
 
             text.append(options);
@@ -109,7 +109,7 @@ chrome.storage.local.get("settings", function (data) {
                 if (this.getAttribute('data-more') === "0") {
                     this.setAttribute('data-more', 1);
                     this.style.display = 'block';
-                    this.innerHTML = 'Ocultar hate speech';
+                    this.innerHTML = 'Ocultar';
 
                     this.previousElementSibling.previousElementSibling.previousElementSibling.style.display = 'none';
                     this.previousElementSibling.previousElementSibling.style.display = 'inline';
@@ -118,7 +118,7 @@ chrome.storage.local.get("settings", function (data) {
                 else if (this.getAttribute('data-more') === "1") {
                     this.setAttribute('data-more', 0);
                     this.style.display = 'inline';
-                    this.innerHTML = 'Mostrar hate speech';
+                    this.innerHTML = 'Mostrar';
 
                     this.previousElementSibling.previousElementSibling.previousElementSibling.style.display = 'inline';
                     this.previousElementSibling.previousElementSibling.style.display = 'none';
