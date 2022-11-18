@@ -11,6 +11,7 @@
             "matches": [
                 "*://*.u-cursos.cl/ingenieria/2/foro_institucion/*",
                 "*://www.u-cursos.cl/ingenieria/*/*/*/*/foro/*",
+                "*://www.u-cursos.cl/ingenieria/*/*/*/*/grupos/*/*/foro/*",
                 "*://www.u-cursos.cl/uchile/4/foro_institucion/*",
                 "*://www.u-cursos.cl/uchile/*/0/*/1/foro/"
             ],
