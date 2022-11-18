@@ -12,13 +12,16 @@ function sleep(ms) {
 * Function that call the hate-api
 */
 async function api_query(text) {
+
+    let msg_text = text.getElementsByTagName("span")[0].innerHTML;
+
     fetch('https://ia-api.dev.fadiaz.cl/classify', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ "text": text.innerHTML })
+            body: JSON.stringify({ "text": msg_text })
         })
         .then(response => response.json())
         .then(data => {
@@ -28,6 +31,8 @@ async function api_query(text) {
 
             const long_text = text.innerHTML;
             const paragraphs = text.innerHTML.split("<br>");
+
+            console.log({text: msg_text, response: data})
 
             if (data['inc_label']) {
                 text.innerHTML = '<div><span class="short-text">' + "" + '</span><span class="long-text" style="display: none">' + long_text + '</span><br><button class="show-more-button" data-more="0">Mostrar hate speech</span></div>';
