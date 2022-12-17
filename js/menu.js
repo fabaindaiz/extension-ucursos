@@ -61,6 +61,7 @@ function initializeMenu() {
         const settings = data.settings ?? {};
 
         initializeSwitch(settings, "setting-censor-text");
+        initializeSwitch(settings, "setting-censor-hate");
 
         // Delete data button
         const reset_data_button = document.getElementById("tucursos-cc-r");

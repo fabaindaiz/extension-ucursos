@@ -8,21 +8,51 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function connect_button(button) {
+    button.addEventListener('click', function () {
+        // If text is shown less, then show complete
+        if (this.getAttribute('data-more') === "0") {
+            this.setAttribute('data-more', 1);
+            this.style.display = 'block';
+            this.innerHTML = 'Ocultar';
+
+            this.previousElementSibling.previousElementSibling.previousElementSibling.style.display = 'none';
+            this.previousElementSibling.previousElementSibling.style.display = 'inline';
+        }
+        // If text is shown complete, then show less
+        else if (this.getAttribute('data-more') === "1") {
+            this.setAttribute('data-more', 0);
+            this.style.display = 'inline';
+            this.innerHTML = 'Mostrar';
+
+            this.previousElementSibling.previousElementSibling.previousElementSibling.style.display = 'inline';
+            this.previousElementSibling.previousElementSibling.style.display = 'none';
+        }
+    });
+}
+
+AbortSignal.timeout ??= function timeout(ms) {
+    const ctrl = new AbortController()
+    setTimeout(() => ctrl.close(), ms)
+    return ctrl.signal
+  }
+
+
 /**
 * Function that call the hate-api
 */
-async function api_query(text) {
+async function api_query(settings, text) {
 
     let msg_text = text.getElementsByTagName("span")[0].innerHTML;
 
-    fetch('https://ia-api.dev.fadiaz.cl/classify', {
+    fetch('https://ia-api.dev.fadiaz.cl/predict', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ "text": msg_text })
-        })
+        }, 60000)
         .then(response => response.json())
         .then(data => {
 
@@ -34,11 +64,29 @@ async function api_query(text) {
 
             console.log({text: msg_text, response: data})
 
-            if (data['inc_label']) {
-                text.innerHTML = '<div><span class="short-text">' + "Este mensaje puede ser ofensivo" + '</span><span class="long-text" style="display: none">' + long_text + '</span><br><button class="show-more-button" data-more="0">Mostrar</span></div>';
+
+            if (settings["setting-censor-hate"]) {
+                if (data['hatespeech']) {
+                    text.innerHTML = '<div><span class="short-text">' + "Este mensaje puede ser ofensivo" +
+                        '</span><span class="long-text" style="display: none">' + long_text +
+                        '</span><br><button class="show-more-button" data-more="0">Mostrar</span></div>';
+                }
+            }
+            else {
+                if (data['incivility'] || data['hatespeech']) {
+                    text.innerHTML = '<div><span class="short-text">' + "Este mensaje puede ser ofensivo" +
+                        '</span><span class="long-text" style="display: none">' + long_text +
+                        '</span><br><button class="show-more-button" data-more="0">Mostrar</span></div>';
+                }
             }
 
             text.append(options);
+
+            const buttons = text.querySelectorAll('.show-more-button');
+
+            if (buttons.length > 0) {
+                connect_button(buttons[0])
+            }
 
         })
 }
@@ -71,7 +119,7 @@ chrome.storage.local.get("settings", function (data) {
         text[i].append(options); // Added
         */
 
-        api_query(text[i])
+        api_query(settings, text[i])
         
         /*
         const text_length = countLines(text[i]);
@@ -91,41 +139,5 @@ chrome.storage.local.get("settings", function (data) {
         text[i].append(options); // Added
         */
     }
-
-
-    /**
-     * We query all added buttons and add eventListeners for their click functionality, when a button
-     * is clicked and the short text is being displayed it shows the entire text and changes to a button
-     * that does the opposite.
-     */
-
-    sleep(2000).then(() => {
-
-        const buttons = document.querySelectorAll('.show-more-button');
-
-        for (let i = 0; i < buttons.length; i++) {
-            buttons[i].addEventListener('click', function () {
-                // If text is shown less, then show complete
-                if (this.getAttribute('data-more') === "0") {
-                    this.setAttribute('data-more', 1);
-                    this.style.display = 'block';
-                    this.innerHTML = 'Ocultar';
-
-                    this.previousElementSibling.previousElementSibling.previousElementSibling.style.display = 'none';
-                    this.previousElementSibling.previousElementSibling.style.display = 'inline';
-                }
-                // If text is shown complete, then show less
-                else if (this.getAttribute('data-more') === "1") {
-                    this.setAttribute('data-more', 0);
-                    this.style.display = 'inline';
-                    this.innerHTML = 'Mostrar';
-
-                    this.previousElementSibling.previousElementSibling.previousElementSibling.style.display = 'inline';
-                    this.previousElementSibling.previousElementSibling.style.display = 'none';
-                }
-            });
-        }
-
-    });
 
 });

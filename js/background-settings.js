@@ -5,7 +5,8 @@ chrome.runtime.onInstalled.addListener(function() {
     // Set default settings
     const settings = {
         "my-user": -1,
-        "setting-censor-text": true,        // Toggle for censor text
+        "setting-censor-text": true,        // Toggle for censor incivility
+        "setting-censor-hate": false,        // Toggle for censor hate speech
     };
 
     chrome.storage.local.set({"settings": settings}, function() {
