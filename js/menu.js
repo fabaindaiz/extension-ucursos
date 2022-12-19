@@ -62,6 +62,7 @@ function initializeMenu() {
 
         initializeSwitch(settings, "setting-censor-text");
         initializeSwitch(settings, "setting-censor-hate");
+        initializeSwitch(settings, "setting-show-logs");
 
         // Delete data button
         const reset_data_button = document.getElementById("tucursos-cc-r");
