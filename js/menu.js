@@ -60,20 +60,9 @@ function initializeMenu() {
     chrome.storage.local.get("settings").then(data => {
         const settings = data.settings ?? {};
 
-        // Course Counter (cc-)
-        initializeSwitch(settings, "cc-show-counter");
-        initializeSwitch(settings, "cc-save-participants");
-        //initializeSwitch(settings, "cc-show-saved-icon");
-
-        // Element Hider (eh-)
-        initializeSwitch(settings, "eh-hide-piechart");
-        initializeSwitch(settings, "eh-shorten-message");
-        initializeSwitch(settings, "eh-hide-preview");
-
-        // Quality of life (qol-)
-        initializeSwitch(settings, "qol-grade-comments");
-        initializeSwitch(settings, "qol-element-resizer");
-        initializeSwitch(settings, "qol-week-counter");
+        initializeSwitch(settings, "setting-censor-text");
+        initializeSwitch(settings, "setting-censor-hate");
+        initializeSwitch(settings, "setting-show-logs");
 
         // Delete data button
         const reset_data_button = document.getElementById("tucursos-cc-r");
