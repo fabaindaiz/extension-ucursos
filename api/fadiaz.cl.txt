@@ -1,0 +1,6 @@
+;;
+;; Domain:     fadiaz.cl.
+;; Exported:   2022-12-20 13:52:58
+;;
+
+hateapi.fadiaz.cl.	1	IN	CNAME	gate.dcc.uchile.cl.
